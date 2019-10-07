@@ -13,12 +13,21 @@ LR = 0.006  # learning rate
 
 def get_batch():
     global BATCH_START, TIME_STEPS
+    print("BATCH_START, TIME_STEPS: ", BATCH_START, TIME_STEPS)
     # xs shape (50 batch,20 steps)
     xs = np.arange(BATCH_START, BATCH_START+TIME_STEPS *
-                   BATCH_SIZE).reshape((BATCH_SIZE, TIME_STEPS)) / (10*np.pi)
+                   BATCH_SIZE)
+    # print("xs 0: ", xs)
+    xs = xs.reshape((BATCH_SIZE, TIME_STEPS))
+    # print("xs 1: ", xs)
+    xs = xs / (10*np.pi)
+    # print("xs 2: ", xs)
     seq = np.sin(xs)
+    # print("seq: ", seq)
     res = np.cos(xs)
+    # print("res: ", res)
     BATCH_START += TIME_STEPS
+    # print("BATCH_START: ", BATCH_START)
 
     # returned seq, res and xs:shape(batch, step, input)
     return [seq[:, :, np.newaxis], res[:, :, np.newaxis], xs]
@@ -100,6 +109,7 @@ class LSTMRNN(object):
             )
             tf.summary.scalar('cost', self.cost)
 
+    # @staticmethod
     def ms_error(self, labels, logits):
         return tf.square(tf.subtract(labels, logits))
 
@@ -112,11 +122,18 @@ class LSTMRNN(object):
         return tf.get_variable(name=name, shape=shape, initializer=initializer)
 
 
-if __name__ == '__main__':
+def main():
     # construct LSTMRNN model
     model = LSTMRNN(TIME_STEPS, INPUT_SIZE, OUTPUT_SIZE, CELL_SIZE, BATCH_SIZE)
     s = tf.Session()
+
+    merged = tf.summary.merge_all()
+    writer = tf.summary.FileWriter("checkpoints", s.graph)
+
     s.run(tf.global_variables_initializer())
+
+    plt.ion()
+    plt.show()
 
     for i in range(200):
         seq, res, xs = get_batch()
@@ -135,5 +152,23 @@ if __name__ == '__main__':
         _, cost, state, pred = s.run([model.train_op, model.cost, model.cell_final_state, model.pred],
                                      feed_dict=feed_dict)
 
+        # plotting
+        plt.plot(xs[0, :], res[0].flatten(), 'r', xs[0, :],
+                 pred.flatten()[:TIME_STEPS], 'b--')
+        plt.ylim((-1.2, 1.2))
+        plt.draw()
+        plt.pause(0.2)
+
         if i % 20 == 0:
             print('cost: ', round(cost, 4))
+            result = s.run(merged, feed_dict)
+            writer.add_summary(result, i)
+
+
+if __name__ == '__main__':
+    # run main
+    main()
+
+    # run test
+    # b = get_batch()
+    # print(b)
