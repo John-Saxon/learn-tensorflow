@@ -153,7 +153,7 @@ def main():
                                      feed_dict=feed_dict)
 
         # plotting
-        plt.plot(xs[0, :], res[0].flatten(), 'r', xs[0, :],
+        plt.plot(xs[0, :], seq[0].flatten(), 'g', xs[0, :], res[0].flatten(), 'r', xs[0, :],
                  pred.flatten()[:TIME_STEPS], 'b--')
         plt.ylim((-1.2, 1.2))
         plt.draw()
@@ -167,8 +167,10 @@ def main():
 
 if __name__ == '__main__':
     # run main
-    main()
+    # main()
 
     # run test
-    # b = get_batch()
-    # print(b)
+    TIME_STEPS = 2  # backpropagation through time 的 time_steps
+    BATCH_SIZE = 1
+    b = get_batch()
+    print(b)
