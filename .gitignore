@@ -109,3 +109,9 @@ checkpoints/
 
 # test data
 MNIST_data
+
+# png
+*.png
+
+# data
+data/

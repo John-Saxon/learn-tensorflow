@@ -18,3 +18,9 @@ print(data3)
 
 data4 = data1.dropna(axis=1, subset=[0])
 print(data4)
+
+print('----------5------------')
+data5 = data1.dropna(inplace=True)
+print(data5)
+print('----------1------------')
+print(data1)
