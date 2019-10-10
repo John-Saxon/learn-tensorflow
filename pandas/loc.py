@@ -10,23 +10,36 @@ print(df.shape)
 print(df.head(5))
 
 
-# loc must assign column names
-print("\n\n-----------loc-------------\n")
-print(df.loc[0, 'YEAR'])
-print(df.loc[0:3, ['MONTH', 'DAY']])
-print(df.loc[[0, 5],  ['MONTH', 'DAY']])
+def locationRange():
+    # loc must assign column names
+    print("\n\n-----------loc-------------\n")
+    print(df.loc[0, 'YEAR'])
+    print(df.loc[0:3, ['MONTH', 'DAY']])
+    print(df.loc[[0, 5],  ['MONTH', 'DAY']])
+
+    # iloc must assign column index
+    print("\n\n-----------iloc-------------\n")
+    print(df.iloc[1, 1])
+    print(df.iloc[0:3, [0, 1]])
+
+    # ix assign index or name
+    print("\n\n-----------ix-------------\n")
+    print(df.ix[1, 'YEAR'])
+    print(df.ix[0:3, [0, 1]])
+
+    print(df.ix[df.shape[0]-2: df.shape[0]+2])
 
 
-# iloc must assign column index
-print("\n\n-----------iloc-------------\n")
-print(df.iloc[1, 1])
-print(df.iloc[0:3, [0, 1]])
+def locationExact():
+    # get value of an exact coordinate
+    print("\n\n-----------at-------------\n")
+    print(df.at[1, 'YEAR'])
+    # print(df.at[0:3, [0, 1]]) # ranging is illegal
+
+    print("\n\n-----------iat-------------\n")
+    print(df.iat[1, 0])
 
 
-# ix assign index or name
-print("\n\n-----------ix-------------\n")
-print(df.ix[1, 'YEAR'])
-print(df.ix[0:3, [0, 1]])
-
-
-print(df.ix[df.shape[0]-2: df.shape[0]+2])
+if __name__ == '__main__':
+    locationExact()
+    # locationRange()
